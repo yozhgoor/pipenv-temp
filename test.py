@@ -1,8 +1,8 @@
 import unittest
 
-from utils import Dependency
-from utils import Repository
-from utils import parse_dependency
+from dependency import Dependency
+from dependency import Repository
+from dependency import parse_dependency
 
 def assert_eq(test_name, left, right):
     if left == right:

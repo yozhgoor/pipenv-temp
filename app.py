@@ -2,25 +2,33 @@ import argparse
 import os
 import shutil
 
-from utils import parse_dependency
+from dependency import parse_dependency
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="pipenv-temp")
     parser.add_argument("dependencies", nargs='*', help="dependencies passed to pipenv")
-    parser.add_argument("--clear", default=False)
     args = parser.parse_args()
 
-    try:
+    if os.path.isdir("tmp"):
         pipfile = open("tmp/Pipfile", "w")
-    except FileNotFoundError:
+    else:
         os.mkdir("tmp")
         pipfile = open("tmp/Pipfile", "w")
+
+    pipfile.write("[packages]\n")
 
     for dependency in args.dependencies:
         dependency = parse_dependency(dependency)
         print(dependency.debug())
 
-        pipfile.write(dependency.debug()+"\n")
+        pipfile.write(dependency.fmt()+"\n")
 
-    pipfile = open("tmp/Pipfile", "r")
     pipfile.close()
+
+    appfile = open("tmp/app.py", "w")
+    appfile.write('''import requests
+
+request = requests.get("https://github.com/yozhgoor")
+print(request.status_code)
+    ''')
+    appfile.close()
