@@ -20,7 +20,7 @@ if __name__ == '__main__':
         dependency = parse_dependency(dependency)
         print(dependency.debug())
 
-        pipfile.write(dependency.debug())
+        pipfile.write(dependency.debug()+"\n")
 
     pipfile = open("tmp/Pipfile", "r")
     pipfile.close()
