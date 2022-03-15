@@ -32,11 +32,26 @@ if __name__ == '__main__':
     pipfile.close()
     print("Pipfile generated")
 
-    appfile = open(os.path.join(tmp_dir, "app.py"), "w")
-    appfile.write('''import requests
+    app_file = open(os.path.join(tmp_dir, "app.py"), "w")
+    app_file.write('''import requests
 
 request = requests.get("https://github.com/yozhgoor")
 print(request.status_code)
     ''')
-    appfile.close()
+    app_file.close()
     print("app.py generated")
+
+    to_delete_file = open(os.path.join(tmp_dir, "TO_DELETE"), "x")
+    to_delete_file.close()
+
+    # install dependencies with pipenv
+
+    # start a shell
+
+    # when shell exit (cleanup)
+
+    if os.path.isfile(os.path.join(tmp_dir, "TO_DELETE")):
+        shutil.rmtree(tmp_dir)
+        print(f"Project deleted")
+    else:
+        print(f"Project preserved at {tmp_dir}")
