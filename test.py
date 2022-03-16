@@ -4,123 +4,50 @@ from dependency import Dependency
 from dependency import Repository
 from dependency import parse_dependency
 
-class TestFailed(Exception):
-    pass
-
-def assert_eq(test_name, left, right):
-    if left == right:
-        print(f"{test_name}: Ok")
-        return True
-    else:
-        print(f"{test_name}: Error")
-        print("    Left: {0}, Right: {1}".format(left.debug(), right.debug()))
-        return False
-
 class TestDependencyParsing:
+    def test_dependency(self):
+        assert Dependency("requests", None) == parse_dependency("requests")
 
-    def dependency():
-        dependency = Dependency("requests", None)
-        parsed = parse_dependency("requests")
+    def test_dependency_with_version(self):
+        assert Dependency("requests", "2.27") \
+            == parse_dependency("requests=2.27")
 
-        return assert_eq("dependency", parsed, dependency)
+    def test_dependency_with_exact_version(self):
+        assert Dependency("requests", "=2.27.1") \
+            == parse_dependency("requests==2.27.1")
 
-    def dependency_with_version():
-        dependency = Dependency("anyhow", "0.1")
-        parsed = parse_dependency("anyhow=0.1")
+    def test_dependency_with_maximal_version(self):
+        assert Dependency("requests", "<2.25.1") \
+            == parse_dependency("requests=<2.25.1")
 
-        return assert_eq("dependency_with_version", parsed, dependency)
+    def test_repository_with_http_url(self):
+        assert Repository("matplotlib", "https://github.com/matplotlib/matplotlib", None, None) \
+            == parse_dependency("matplotlib=https://github.com/matplotlib/matplotlib")
 
-    def dependency_with_exact_version():
-        dependency = Dependency("anyhow", "=0.1")
-        parsed = parse_dependency("anyhow==0.1")
+    def test_repository_with_http_url_and_no_extension(self):
+        assert Repository("matplotlib", "https://github.com/matplotlib/matplotlib", None, None) \
+            == parse_dependency("https://github.com/matplotlib/matplotlib")
 
-        return assert_eq("dependency_with_exact_version", parsed, dependency)
+    def test_repository_with_http_url_and_branch(self):
+        assert Repository("matplotlib", "https://github.com/matplotlib/matplotlib.git", "old_master", None) \
+            == parse_dependency("matplotlib=https://github.com/matplotlib/matplotlib.git#branch=old_master")
 
-    def dependency_with_maximal_version():
-        dependency = Dependency("anyhow", "<1.0.2")
-        parsed = parse_dependency("anyhow=<1.0.2")
+    def test_repository_with_http_url_and_rev(self):
+        assert Repository("matplotlib", "https://github.com/matplotlib/matplotlib.git", None, "f6e0ee4") \
+            == parse_dependency("matplotlib=https://github.com/matplotlib/matplotlib.git#rev=f6e0ee4")
 
-        return assert_eq("dependency_with_maximal_version", parsed, dependency)
+    def test_repository_with_ssh_url(self):
+        assert Repository("pygame","ssh://git@github.com:pygame/pygame.git", None, None) \
+            == parse_dependency("pygame=ssh://git@github.com:pygame/pygame.git")
 
-    def repository_with_http_url():
-        repository = Repository("tokio", "https://github.com/tokio-rs/tokio.git", None, None)
-        parsed = parse_dependency("tokio=https://github.com/tokio-rs/tokio.git")
+    def test_repository_with_ssh_url_and_no_extension(self):
+        assert Repository("pygame","ssh://git@github.com:pygame/pygame", None, None) \
+            == parse_dependency("ssh://git@github.com:pygame/pygame")
 
-        return assert_eq("repository_with_http_url", parsed, repository)
+    def test_repository_with_ssh_url_and_branch(self):
+        assert Repository("pygame","ssh://git@github.com:pygame/pygame.git", "android", None) \
+            == parse_dependency("pygame=ssh://git@github.com:pygame/pygame.git#branch=android")
 
-    def repository_with_http_url_and_no_extension():
-        repository = Repository("tokio", "https://github.com/tokio-rs/tokio", None, None)
-        parsed = parse_dependency("tokio=https://github.com/tokio-rs/tokio")
-
-        return assert_eq("repository_with_http_url", parsed, repository)
-
-    def repository_with_http_url_and_branch():
-        repository = Repository("tokio", "https://github.com/tokio-rs/tokio.git", "compat", None)
-        parsed = parse_dependency("tokio=https://github.com/tokio-rs/tokio.git#branch=compat")
-
-        return assert_eq("repository_with_http_url_and_branch", parsed, repository)
-
-    def repository_with_http_url_and_rev():
-        repository = Repository("tokio", "https://github.com/tokio-rs/tokio.git", None, "75c0777")
-        parsed = parse_dependency("tokio=https://github.com/tokio-rs/tokio.git#rev=75c0777")
-
-        return assert_eq("repository_with_http_url_and_rev", parsed, repository)
-
-    def repository_with_ssh_url():
-        repository = Repository("serde","ssh://git@github.com/serde-rs/serde.git", None, None)
-        parsed = parse_dependency("serde=ssh://git@github.com/serde-rs/serde.git")
-
-        return assert_eq("repository_with_ssh_url", parsed, repository)
-
-    def repository_with_ssh_url_and_no_extension():
-        repository = Repository("serde","ssh://git@github.com/serde-rs/serde", None, None)
-        parsed = parse_dependency("serde=ssh://git@github.com/serde-rs/serde")
-
-        return assert_eq("repository_with_ssh_url_and_no_extension", parsed, repository)
-
-    def repository_with_ssh_url_and_branch():
-        repository = Repository("serde","ssh://git@github.com/serde-rs/serde.git", None, None)
-        parsed = parse_dependency("serde=ssh://git@github.com/serde-rs/serde.git")
-
-        return assert_eq("repository_with_ssh_url_and_branch", parsed, repository)
-
-    def repository_with_ssh_url_and_rev():
-        repository = Repository("serde", "ssh://git@github.com/serde-rs/serde.git", None, "5b140361a")
-        parsed = parse_dependency("serde=ssh://git@github.com/serde-rs/serde.git#rev=5b140361a")
-
-        return assert_eq("repository_with_ssh_url_and_rev", parsed, repository)
-
-status = True
-
-if not TestDependencyParsing.dependency():
-    status = False
-if not TestDependencyParsing.dependency_with_version():
-    status = False
-
-if not TestDependencyParsing.dependency_with_exact_version():
-    status = False
-if not TestDependencyParsing.dependency_with_maximal_version():
-    status = False
-
-if not TestDependencyParsing.repository_with_http_url():
-    status = False
-if not TestDependencyParsing.repository_with_http_url_and_no_extension():
-    status = False
-if not TestDependencyParsing.repository_with_http_url_and_branch():
-    status = False
-if not TestDependencyParsing.repository_with_http_url_and_rev():
-    status = False
-
-if not TestDependencyParsing.repository_with_ssh_url():
-    status = False
-if not TestDependencyParsing.repository_with_ssh_url_and_no_extension():
-    status = False
-if not TestDependencyParsing.repository_with_ssh_url_and_branch():
-    status = False
-if not TestDependencyParsing.repository_with_ssh_url_and_rev():
-    status = False
-
-if status:
-    print("Test passing")
-else:
-    raise TestFailed
+    def test_repository_with_ssh_url_and_rev(self):
+        assert Repository("pygame", "ssh://git@github.com:pygame/pygame.git", None, "c1afa68") \
+            == parse_dependency("pygame=ssh://git@github.com:pygame/pygame.git#rev=c1afa68")
