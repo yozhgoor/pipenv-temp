@@ -6,7 +6,7 @@ from dependency import parse_dependency
 
 class TestDependencyParsing:
     def test_dependency(self):
-        assert Dependency("request", None) == parse_dependency("requests")
+        assert Dependency("requests", None) == parse_dependency("requests")
 
     def test_dependency_with_version(self):
         assert Dependency("requests", "2.27") \
