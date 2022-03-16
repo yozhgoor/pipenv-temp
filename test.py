@@ -19,8 +19,8 @@ def assert_eq(test_name, left, right):
 class TestDependencyParsing:
 
     def dependency():
-        dependency = Dependency("anyhow", None)
-        parsed = parse_dependency("anyhow")
+        dependency = Dependency("requests", None)
+        parsed = parse_dependency("requests")
 
         return assert_eq("dependency", parsed, dependency)
 
@@ -82,7 +82,7 @@ class TestDependencyParsing:
         repository = Repository("serde","ssh://git@github.com/serde-rs/serde.git", None, None)
         parsed = parse_dependency("serde=ssh://git@github.com/serde-rs/serde.git")
 
-        return assert_eq("repository_with_ssh_url", parsed, repository)
+        return assert_eq("repository_with_ssh_url_and_branch", parsed, repository)
 
     def repository_with_ssh_url_and_rev():
         repository = Repository("serde", "ssh://git@github.com/serde-rs/serde.git", None, "5b140361a")
