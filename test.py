@@ -120,10 +120,7 @@ if not TestDependencyParsing.repository_with_ssh_url_and_branch():
 if not TestDependencyParsing.repository_with_ssh_url_and_rev():
     status = False
 
-try:
-    if status:
-        print("Test passing")
-    else:
-        raise TestFailed
-except TestFailed:
-    print("Test failed")
+if status:
+    print("Test passing")
+else:
+    raise TestFailed
