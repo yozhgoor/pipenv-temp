@@ -37,7 +37,7 @@ class TestDependencyParsing:
         return assert_eq("dependency_with_exact_version", parsed, dependency)
 
     def dependency_with_maximal_version():
-        dependency = Dependency("anyhow", "<1.2.2")
+        dependency = Dependency("anyhow", "<1.0.2")
         parsed = parse_dependency("anyhow=<1.0.2")
 
         return assert_eq("dependency_with_maximal_version", parsed, dependency)
