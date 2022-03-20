@@ -1,5 +1,3 @@
-import unittest
-
 from dependency import Dependency
 from dependency import Repository
 from dependency import parse_dependency
