@@ -19,8 +19,5 @@ jobs:
       - name: Install pytest
         run: pip install pytest
 
-      - name: Install appdirs
-        run: pip install appdirs
-
       - name: Run pytest
-        run: pytest pipenvtemp.py -v
+        run: pytest pipenv-temp -v
