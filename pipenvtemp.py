@@ -1,10 +1,10 @@
+import appdirs
 import argparse
 import os
-import shutil
-import appdirs
-import tempfile
-import subprocess
 import re
+import shutil
+import subprocess
+import tempfile
 
 class Dependency:
     def __init__(self, name, version):
