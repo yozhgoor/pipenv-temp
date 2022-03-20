@@ -1,6 +1,6 @@
-from dependency import Dependency
-from dependency import Repository
-from dependency import parse_dependency
+from pipenvtemp import Dependency
+from pipenvtemp import Repository
+from pipenvtemp import parse_dependency
 
 class TestDependencyParsing:
     def test_dependency(self):
